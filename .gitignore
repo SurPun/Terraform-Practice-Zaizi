@@ -1,0 +1,10 @@
+# Node JS module files
+node_modules
+
+# Ignore local configuration files that should not be shared
+.terraform/
+*.tfstate
+*.tfstate.backup
+
+# Ignore files that contain secrets or sensitive information
+.aws

@@ -97,28 +97,29 @@ resource "aws_security_group" "allow-web" {
   }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// Create EC2 Instance
-resource "aws_instance" "ubuntu-instance" {
-  ami           = "ami-0cd8ad123effa531a"
-  instance_type = "t2.micro"
-
-  tags = {
-    Name = "Instance"
-  }
+// 7. Create a Network Interface
+resource "aws_network_interface" "web-server-pub" {
+  subnet_id       = aws_subnet.public-subnet.id
+  private_ips     = ["10.0.1.50"]
+  security_groups = [aws_security_group.allow-web.id]
 }
+
+// 8. Assign an Elastic IP to the Network Interface
+resource "aws_eip" "one" {
+  vpc                       = true
+  network_interface         = aws_network_interface.web-server-pub.id
+  associate_with_private_ip = "10.0.1.50"
+  depends_on = [
+    aws_internet_gateway.public-gateway
+  ]
+}
+
+// 9. Create EC2 Instance
+# resource "aws_instance" "ubuntu-instance" {
+#   ami           = "ami-0cd8ad123effa531a"
+#   instance_type = "t2.micro"
+
+#   tags = {
+#     Name = "Instance"
+#   }
+# }

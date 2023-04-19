@@ -4,7 +4,7 @@ provider "aws" {
   profile                 = "aws-cred"
 }
 
-// 1. Create A Public VPC 
+// 1. Create a Public VPC 
 resource "aws_vpc" "public-vpc" {
   cidr_block = "10.0.0.0/16"
 
@@ -28,8 +28,8 @@ resource "aws_route_table" "public-route" {
   }
 
   route {
-    ipv6_cidr_block        = "::/0"
-    egress_only_gateway_id = aws_internet_gateway.public-gateway.id
+    ipv6_cidr_block = "::/0"
+    gateway_id      = aws_internet_gateway.public-gateway.id
   }
 
   tags = {
@@ -37,7 +37,7 @@ resource "aws_route_table" "public-route" {
   }
 }
 
-// 4. Create A Public Subnet
+// 4. Create a Public Subnet
 resource "aws_subnet" "public-subnet" {
   vpc_id            = aws_vpc.public-vpc.id
   cidr_block        = "10.0.1.0/24"
@@ -56,7 +56,7 @@ resource "aws_route_table_association" "a" {
 }
 
 // 6. Create a Security Group
-resource "aws_security_group" "allow-web" {
+resource "aws_security_group" "allow_web" {
   name        = "allow_web_traffic"
   description = "Allow Inbound Web Traffic"
   vpc_id      = aws_vpc.public-vpc.id
@@ -79,8 +79,8 @@ resource "aws_security_group" "allow-web" {
 
   ingress {
     description = "SSH"
-    from_port   = 2
-    to_port     = 2
+    from_port   = 22
+    to_port     = 22
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -93,7 +93,7 @@ resource "aws_security_group" "allow-web" {
   }
 
   tags = {
-    Name = "Allow_Web"
+    Name = "allow_web"
   }
 }
 
@@ -101,7 +101,7 @@ resource "aws_security_group" "allow-web" {
 resource "aws_network_interface" "web-server-pub" {
   subnet_id       = aws_subnet.public-subnet.id
   private_ips     = ["10.0.1.50"]
-  security_groups = [aws_security_group.allow-web.id]
+  security_groups = [aws_security_group.allow_web.id]
 }
 
 // 8. Assign an Elastic IP to the Network Interface
@@ -115,11 +115,27 @@ resource "aws_eip" "one" {
 }
 
 // 9. Create EC2 Instance
-# resource "aws_instance" "ubuntu-instance" {
-#   ami           = "ami-0cd8ad123effa531a"
-#   instance_type = "t2.micro"
+resource "aws_instance" "ubuntu-instance" {
+  ami               = "ami-09744628bed84e434"
+  instance_type     = "t2.micro"
+  availability_zone = "eu-west-2a"
+  key_name          = "main-key"
 
-#   tags = {
-#     Name = "Instance"
-#   }
-# }
+  network_interface {
+    device_index         = 0
+    network_interface_id = aws_network_interface.web-server-pub.id
+  }
+
+  // On Deployment Install ...
+  user_data = <<-EOF
+                #!/bin/bash
+                sudo apt update -y
+                sudo apt install apache2 -y
+                sudo systemctl start apache2
+                sudo bash -c 'echo your very first web server > /var/www/html/index.html'
+                EOF
+
+  tags = {
+    Name = "web-server"
+  }
+}

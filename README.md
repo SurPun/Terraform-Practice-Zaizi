@@ -18,3 +18,4 @@ To run this Project, you must have an AWS account with an 'access key' 'and a se
 4. <b>cd</b> into infrastructure using the terminal and run ```terraform init``` command to initializes the working directory.
 5. run ```terraform plan``` command to preview the actions terraform will take
 6. run ```terraform apply``` command to apply the changes
+7. To Destroy infrastructure, run ```terraform destroy```

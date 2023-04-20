@@ -8,3 +8,4 @@ node_modules
 
 # Ignore files that contain secrets or sensitive information
 .aws
+remote_state.tf

@@ -136,6 +136,6 @@ resource "aws_instance" "ubuntu-instance" {
                 EOF
 
   tags = {
-    Name = "web-server"
+    Name = var.ec2_instance_name
   }
 }

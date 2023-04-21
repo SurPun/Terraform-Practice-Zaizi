@@ -117,7 +117,7 @@ resource "aws_eip" "one" {
 // 9. Create EC2 Instance
 resource "aws_instance" "ubuntu-instance" {
   ami               = "ami-09744628bed84e434"
-  instance_type     = "t2.micro"
+  instance_type     = var.ec2_intance_type
   availability_zone = "eu-west-2a"
   key_name          = "main-key"
 

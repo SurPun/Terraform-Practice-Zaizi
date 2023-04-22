@@ -132,10 +132,12 @@ resource "aws_instance" "ubuntu-instance" {
                 sudo apt update -y
                 sudo apt install apache2 -y
                 sudo systemctl start apache2
-                sudo bash -c 'echo your very first web server > /var/www/html/index.html'
+                sudo bash -c 'echo Hello World > /var/www/html/index.html'
                 EOF
 
   tags = {
     Name = var.ec2_instance_name
   }
 }
+
+// Create CodeCommit Module

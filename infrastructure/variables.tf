@@ -1,6 +1,7 @@
 # EC2 
 variable "ec2_instance_name" {
-  type = string
+  type    = string
+  default = "EC2"
 }
 
 variable "ec2_intance_type" {

@@ -141,3 +141,8 @@ resource "aws_instance" "ubuntu-instance" {
 }
 
 // Create CodeCommit Module
+module "codecommit_repo" {
+  source          = "./modules/code_commit"
+  repository_name = "TF_Module_CC"
+  description     = "My CodeCommit repository using TF"
+}

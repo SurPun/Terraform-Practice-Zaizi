@@ -1,4 +1,4 @@
-# Goals of this projects
+# Terraform Practice (IAC)
 
 - [x] Use Terraform to create AWS Resources
 - [ ] Use AWS Lambda to trigger an event
